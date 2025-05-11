@@ -32,9 +32,10 @@ jobs:
           if [[ $GITHUB_REF == refs/tags/v* ]]; then
             VERSION=${GITHUB_REF#refs/tags/v}
           else
-            VERSION=$(node -p \"require('./package.json').version\")
+            VERSION=$(node -p "require('./package.json').version")
           fi
-          echo \"version=$VERSION\" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
