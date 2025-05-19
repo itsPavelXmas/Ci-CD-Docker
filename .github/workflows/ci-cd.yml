@@ -55,3 +55,16 @@ jobs:
         run: |
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/ron-exchange-rate:${{ steps.get_version.outputs.version }} ${{ secrets.DOCKERHUB_USERNAME }}/ron-exchange-rate:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/ron-exchange-rate:latest
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ron-exchange-rate:latest
+            docker stop app || true
+            docker rm app || true
+            docker run -d -p 3000:3000 --name app ${{ secrets.DOCKERHUB_USERNAME }}/ron-exchange-rate:latest
+
