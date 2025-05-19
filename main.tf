@@ -44,6 +44,7 @@ resource "aws_instance" "docker_ec2" {
               amazon-linux-extras install docker -y
               systemctl start docker
               systemctl enable docker
+              usermod -aG docker ec2-user
               EOF
 
   tags = {
